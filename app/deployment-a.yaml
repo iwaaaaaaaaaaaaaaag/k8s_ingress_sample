@@ -32,7 +32,7 @@ spec:
         - name: nginx-conf
           configMap:
             # マウントしたいConfigMapの名前を指定します。
-            name: html-path
+            name: html-path-a
             # ファイルとして作成するConfigMapのキーの配列
             items:
             - key: "nginx.conf"
