@@ -1,0 +1,47 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sample-ingress
+spec:
+  rules:
+  # VirtualHostのホスト名
+  - http:
+    # host: ingress-test.com -> Host: ingress-test.com の条件になる
+      paths:
+      # {DocumentRoot}/app1がトップディレクトリになる
+      - path: /app1
+        pathType: Prefix
+        backend:
+          # bindするService名
+          # service.yamlのmetadata.nameと合わせる
+          service:
+            name: http-service-a
+          # Serviceが公開しているPort
+            port: 
+              number: 80
+      # {DocumentRoot}/app2がトップディレクトリになる
+      - path: /app2
+        pathType: Prefix
+        backend:
+          service:
+            name: http-service-a
+          # Serviceが公開しているPort
+            port: 
+              number: 80
+      - path: /app3
+        pathType: Prefix
+        backend:
+          service:
+            name: http-service-b
+          # Serviceが公開しているPort
+            port: 
+              number: 80
+      # {DocumentRoot}/がトップディレクトリになる
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: http-service-a
+          # Serviceが公開しているPort
+            port: 
+              number: 80

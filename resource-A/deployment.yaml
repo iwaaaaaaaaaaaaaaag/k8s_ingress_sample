@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sample-http-app-a
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: sample-http-app-a
+  template:
+    metadata:
+      labels:
+        app: sample-http-app-a
+    spec:
+      containers:
+      - name: nginx-container
+        image: nginx:alpine
+        ports:
+        - name: http-port
+          containerPort: 80
+        volumeMounts:
+        - name: nginx-conf
+          mountPath: "/etc/nginx"
+          readOnly: true
+        - name: html-path-app1
+          mountPath: "/usr/share/nginx/html/app1"
+          readOnly: true
+        - name: html-path-app2
+          mountPath: "/usr/share/nginx/html/app2"
+          readOnly: true
+      volumes:
+        - name: nginx-conf
+          configMap:
+            # マウントしたいConfigMapの名前を指定します。
+            name: html-path
+            # ファイルとして作成するConfigMapのキーの配列
+            items:
+            - key: "nginx.conf"
+              path: "nginx.conf"
+        # Podレベルでボリュームを設定し、Pod内のコンテナにマウントします。
+        - name: html-path-app1
+          configMap:
+            # マウントしたいConfigMapの名前を指定します。
+            name: html-path-a
+            # ファイルとして作成するConfigMapのキーの配列
+            items:
+            - key: "app1"
+              path: "index.html"
+        - name: html-path-app2
+          configMap:
+            # マウントしたいConfigMapの名前を指定します。
+            name: html-path-a
+            # ファイルとして作成するConfigMapのキーの配列
+            items:
+            - key: "app2"
+              path: "index.html"
+            
